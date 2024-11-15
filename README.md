@@ -15,7 +15,7 @@ Basic flow for proposals:
 ## Environment variables
 
 These are the required env vars:
-
+```
 AGORA_SIGNER_MNE
 AGORA_MAX_LIMIT_PROPOSALS
 AGORA_URL
@@ -33,3 +33,4 @@ FIREBASE_MESSAGING_SENDER_ID
 FIREBASE_APP_ID
 FIREBASE_CREDENTIALS_JSON
 FIREBASE_DATABASE_URL
+```
