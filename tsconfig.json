@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2020", // Usar ES2020 para compatibilidad moderna
+    "module": "CommonJS", // Usar módulos de Node.js
+    "strict": true, // Habilitar chequeo estricto de tipos
+    "esModuleInterop": true, // Soporte para importaciones de ES Modules
+    "skipLibCheck": true, // Omite chequeo de tipos en librerías
+    "outDir": "./dist", // Directorio de salida de los archivos compilados
+    "rootDir": "./src", // Directorio raíz de los archivos TypeScript
+    "resolveJsonModule": true, // Permite importar archivos .json
+    "moduleResolution": "node"
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

@@ -1,0 +1,45 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+.pnpm-debug.log*
+
+# Firebase
+firebase-debug.log
+.firebaserc
+.firebase/
+firebase.json
+firestore.indexes.json
+firestore.rules
+storage.rules
+
+# TypeScript
+*.tsbuildinfo
+dist/
+build/
+out/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+yarn-error.log
+pnpm-debug.log*
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# IDEs
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.
