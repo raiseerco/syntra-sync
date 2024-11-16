@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 
 dotenv.config();
 const SNAPSHOT_GRAPHQL_URL = process.env.SNAPSHOT_GRAPHQL_URL as string;
+const DAO_NAME = "arbitrum"; // TODO change this for future DAOs
+
 // const API_RETRY_DELAY = process.env.RETRY_DELAY;
 
 export async function fetchProposalsSnapshot(daoAddress: string) {
@@ -100,6 +102,7 @@ export async function fetchProposalsSnapshot(daoAddress: string) {
       const author = findAuthor(i.author);
       return {
         ...i,
+        dao: DAO_NAME,
         source: "snapshot",
         choices: i.choices.map((choice: any, index: number) => ({
           type: choice,

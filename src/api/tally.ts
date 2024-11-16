@@ -6,6 +6,7 @@ dotenv.config();
 const TALLY_GRAPHQL_URL = process.env.TALLY_GRAPHQL_URL as string;
 const TALLY_API_KEY = process.env.TALLY_API_KEY as string;
 const API_RETRY_DELAY = process.env.API_RETRY_DELAY as string;
+const DAO_NAME = "arbitrum"; // TODO change this for future DAOs
 
 export async function fetchProposalsTally(organizationId: string) {
   console.log(`TALLY: Start.`);
@@ -258,6 +259,7 @@ export async function fetchProposalsTally(organizationId: string) {
 
     const dataTallyClipped = allProposals.map((i: any) => ({
       id: i.id,
+      dao: DAO_NAME,
       title: i.metadata.title,
       body: i.metadata.description,
       quorum: i.quorum,
