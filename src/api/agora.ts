@@ -5,6 +5,7 @@ dotenv.config();
 
 const MNE = process.env.AGORA_SIGNER_MNE;
 const AGORA_URL = process.env.AGORA_URL;
+const DAO_NAME = "optimism"; // TODO change this for future DAOs
 
 async function getNonce() {
   try {
@@ -97,6 +98,7 @@ export async function fetchProposalsAgora() {
       const dataAgora = await resAgora.json();
       const clippedAgora = dataAgora.data.map((i: any) => ({
         id: i.id,
+        dao: DAO_NAME,
         title: i.markdowntitle,
         body: i.description,
         createdTime: i.createdTime,

@@ -4,13 +4,13 @@ import dotenv from "dotenv";
 dotenv.config();
 
 if (process.env.GOOGLE_CLOUD_PROJECT) {
-  // Si el script corre en Google Cloud Functions, usamos las credenciales x default de Google
+  // IF script is in Google Cloud Functions, we use the default service account
   admin.initializeApp({
     credential: admin.credential.applicationDefault(),
     databaseURL: process.env.FIREBASE_DATABASE_URL,
   });
 } else {
-  // Si ejecuta el script fuera de Google Cloud Functions (en local o en otro entorno), usa el archivo JSON con las credenciales
+  // If script is running locally, we use the service account
   const serviceAccount = JSON.parse(
     process.env.FIREBASE_CREDENTIALS_JSON as string,
   );
@@ -23,27 +23,42 @@ if (process.env.GOOGLE_CLOUD_PROJECT) {
 const db = admin.firestore();
 
 export async function saveProposalsBatch(proposals: any[]) {
-  const batchSize = 500; // max len in firestore
-  const proposalsCollection = db.collection("proposals");
-  const chunks = [];
+  //  split proposals into each DAO
+  const batchSize = 500; // Max length in Firestore
 
-  for (let i = 0; i < proposals.length; i += batchSize) {
-    chunks.push(proposals.slice(i, i + batchSize));
-  }
+  const DAOCollection = db.collection("DAOS");
 
-  for (const chunk of chunks) {
-    const batch = db.batch();
+  try {
+    const snapshot = await DAOCollection.get();
+    for (const doc of snapshot.docs) {
+      // each DAO
 
-    chunk.forEach(proposal => {
-      const proposalDoc = proposalsCollection.doc(proposal.id);
-      batch.set(proposalDoc, proposal);
-    });
+      const daoId = doc.id;
+      const proposalsCollection = db.collection(`DAOS/${daoId}/proposals`);
+      const daoProposals = proposals.filter(i => i.dao === daoId);
 
-    try {
-      await batch.commit();
-      console.log(`Batch of ${chunk.length} saved successfully.`);
-    } catch (error) {
-      console.error("Error: ", error);
+      const chunks = [];
+      for (let i = 0; i < daoProposals.length; i += batchSize) {
+        chunks.push(daoProposals.slice(i, i + batchSize));
+      }
+
+      for (const chunk of chunks) {
+        const batch = db.batch();
+
+        chunk.forEach(proposal => {
+          const proposalDoc = proposalsCollection.doc(proposal.id);
+          batch.set(proposalDoc, proposal);
+        });
+
+        try {
+          await batch.commit();
+          console.log(`${daoId}: Batch of ${chunk.length} saved successfully.`);
+        } catch (error) {
+          console.error("Error: ", error);
+        }
+      }
     }
+  } catch (error) {
+    console.error("Error retrieving DAOs: ", error);
   }
 }

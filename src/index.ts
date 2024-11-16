@@ -32,30 +32,15 @@ async function start() {
   }
 }
 
-start();
+start(); // Executes the fetch and store
 
-// // Función programada que corre diariamente a la medianoche UTC
+// executed at midnight UTC
 // export const scheduledFetchAndStore = functions.pubsub
 //   .schedule("0 0 * * *")
 //   .onRun(async () => {
 //     try {
-//       // 1. fetch data from apis
-
-//       //
-
-//       const response = await fetch("https://api.example.com/data");
-//       if (!response.ok) {
-//         throw new Error(`Error en la API: ${response.statusText}`);
-//       }
-//       const data = await response.json();
-
-//       // 2. store in Firestore
-//       await db.collection("externalData").add({
-//         ...data,
-//         fetchedAt: admin.firestore.FieldValue.serverTimestamp(),
-//       });
-
-//       console.log("Datos guardados correctamente en Firestore.");
+//       console.log("Running scheduled fetch and store");
+//       await start();
 //     } catch (error) {
 //       console.error("Error al obtener o guardar datos:", error);
 //     }
