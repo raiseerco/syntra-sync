@@ -1,13 +1,11 @@
-import dotenv from "dotenv";
 import { fetchProposalsAgora } from "./api/agora";
 import { fetchProposalsSnapshot } from "./api/snapshot";
 import { fetchProposalsTally } from "./api/tally";
+import { onSchedule } from "firebase-functions/v2/scheduler";
 import { saveProposalsBatch } from "./services/firestore";
 
-dotenv.config();
-
-const TALLY_ORGANIZATION_ID = process.env.TALLY_ORGANIZATION_ID;
-const SNAPSHOT_DAO_ADDRESS = process.env.SNAPSHOT_DAO_ADDRESS;
+const TALLY_ORGANIZATION_ID = "2206072050315953936"; // TODO take from firebase
+const SNAPSHOT_DAO_ADDRESS = "arbitrumfoundation.eth"; // TODO take from firebase
 
 async function start() {
   try {
@@ -27,21 +25,27 @@ async function start() {
     ];
 
     await saveProposalsBatch(allData);
+    console.log(`Processed ${allData.length} proposals successfully`);
   } catch (error) {
-    console.error("Error ", error);
+    console.error("Error in start function:", error);
+    throw error;
   }
 }
 
-start(); // Executes the fetch and store
-
-// executed at midnight UTC
-// export const scheduledFetchAndStore = functions.pubsub
-//   .schedule("0 0 * * *")
-//   .onRun(async () => {
-//     try {
-//       console.log("Running scheduled fetch and store");
-//       await start();
-//     } catch (error) {
-//       console.error("Error al obtener o guardar datos:", error);
-//     }
-//   });
+export const dailySync = onSchedule(
+  {
+    schedule: "0 10 * * *", // 10 AM UTC = 7 AM GMT-3
+    timeZone: "America/Argentina/Buenos_Aires",
+    retryCount: 3,
+    memory: "256MiB",
+  },
+  async event => {
+    try {
+      await start();
+      console.log("Daily sync completed successfully");
+    } catch (error) {
+      console.error("Error during daily sync:", error);
+      throw error;
+    }
+  },
+);

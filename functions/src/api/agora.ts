@@ -1,10 +1,12 @@
+import { AGORA_MAX_LIMIT_PROPOSALS, AGORA_URL } from "../utils/constants";
+
 import dotenv from "dotenv";
 import { ethers } from "ethers";
 
 dotenv.config();
 
 const MNE = process.env.AGORA_SIGNER_MNE;
-const AGORA_URL = process.env.AGORA_URL;
+
 const DAO_NAME = "optimism"; // TODO change this for future DAOs
 
 async function getNonce() {
@@ -45,7 +47,7 @@ async function authWithAgora() {
       nonce,
     });
 
-    const response = await fetch(`${process.env.AGORA_URL}/auth/verify`, {
+    const response = await fetch(`${AGORA_URL}/auth/verify`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -81,7 +83,7 @@ export async function fetchProposalsAgora() {
     console.log(`AGORA: Start.`);
     do {
       const resAgora = await fetch(
-        `${process.env.AGORA_URL}/proposals?limit=${process.env.AGORA_MAX_LIMIT_PROPOSALS}&offset=${offset}&filter=everything`,
+        `${AGORA_URL}/proposals?limit=${AGORA_MAX_LIMIT_PROPOSALS}&offset=${offset}&filter=everything`,
         {
           method: "GET",
           headers: {
@@ -130,7 +132,6 @@ export async function fetchProposalsAgora() {
     } while (more);
 
     console.log(`AGORA: Read ${allProposals.length} records.`);
-    const d: any[] = allProposals;
     return { ok: true, data: allProposals };
   } catch (error) {
     console.error("AGORA: Error fetching proposals: ", error);

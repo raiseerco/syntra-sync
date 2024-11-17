@@ -1,12 +1,10 @@
-// import { delay } from "../utils/utils";
-
+import { SNAPSHOT_GRAPHQL_URL } from "../utils/constants";
+// import { API_RETRY_DELAY } from "../utils/constants";
 import dotenv from "dotenv";
 
 dotenv.config();
-const SNAPSHOT_GRAPHQL_URL = process.env.SNAPSHOT_GRAPHQL_URL as string;
-const DAO_NAME = "arbitrum"; // TODO change this for future DAOs
 
-// const API_RETRY_DELAY = process.env.RETRY_DELAY;
+const DAO_NAME = "arbitrum"; // TODO change this for future DAOs
 
 export async function fetchProposalsSnapshot(daoAddress: string) {
   // Snapshot does not support pagination, therefore all proposals
