@@ -7,16 +7,16 @@ if (process.env.GOOGLE_CLOUD_PROJECT) {
   // IF script is in Google Cloud Functions, we use the default service account
   admin.initializeApp({
     credential: admin.credential.applicationDefault(),
-    databaseURL: process.env.FIREBASE_DATABASE_URL,
+    databaseURL: process.env.FBASE_DATABASE_URL,
   });
 } else {
   // If script is running locally, we use the service account
   const serviceAccount = JSON.parse(
-    process.env.FIREBASE_CREDENTIALS_JSON as string,
+    process.env.FBASE_CREDENTIALS_JSON as string,
   );
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    databaseURL: process.env.FIREBASE_DATABASE_URL,
+    databaseURL: process.env.FBASE_DATABASE_URL,
   });
 }
 

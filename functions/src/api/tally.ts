@@ -1,11 +1,10 @@
+import { API_RETRY_DELAY, TALLY_GRAPHQL_URL } from "../utils/constants";
 import { delay, weiToEther } from "../utils/utils";
 
 import dotenv from "dotenv";
 
 dotenv.config();
-const TALLY_GRAPHQL_URL = process.env.TALLY_GRAPHQL_URL as string;
 const TALLY_API_KEY = process.env.TALLY_API_KEY as string;
-const API_RETRY_DELAY = process.env.API_RETRY_DELAY as string;
 const DAO_NAME = "arbitrum"; // TODO change this for future DAOs
 
 export async function fetchProposalsTally(organizationId: string) {
@@ -216,7 +215,7 @@ export async function fetchProposalsTally(organizationId: string) {
     }`;
 
     let lastCursor = "";
-    const allProposals = [];
+    const allProposals: any[] = [];
 
     do {
       const varTally = {
