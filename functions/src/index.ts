@@ -25,7 +25,7 @@ async function start() {
     ];
 
     await saveProposalsBatch(allData);
-    console.log(`Processed ${allData.length} proposals successfully`);
+    console.log(`*** Processed ${allData.length} proposals successfully`);
   } catch (error) {
     console.error("Error in start function:", error);
     throw error;

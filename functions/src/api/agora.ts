@@ -9,6 +9,9 @@ const MNE = process.env.AGORA_SIGNER_MNE;
 
 const DAO_NAME = "optimism"; // TODO change this for future DAOs
 
+const convertProposalResultsToArray = (obj: any) =>
+  Object.entries(obj).map(([type, value]) => ({ type, value }));
+
 async function getNonce() {
   try {
     const response = await fetch(`${AGORA_URL}/auth/nonce`, {
@@ -98,33 +101,42 @@ export async function fetchProposalsAgora() {
       }
 
       const dataAgora = await resAgora.json();
-      const clippedAgora = dataAgora.data.map((i: any) => ({
-        id: i.id,
-        dao: DAO_NAME,
-        title: i.markdowntitle,
-        body: i.description,
-        createdTime: i.createdTime,
-        scores: [],
-        scores_state: "not set",
-        scores_total: "",
-        scores_updated: "",
-        start: new Date(i.startTime).getTime() / 1000,
-        end: new Date(i.endTime).getTime() / 1000,
-        author: {
-          address: i.proposer,
-          picture: `https://cdn.stamp.fyi/avatar/eth:${i.proposer}`,
-        },
-        link: `https://vote.optimism.io/proposals/${i.id}`,
-        space: "",
-        status: i.status,
-        state:
-          new Date(i.endTime).getTime() < new Date().getTime()
-            ? "closed"
-            : "active",
-        source: "agora",
-      }));
 
-      allProposals.push(...clippedAgora);
+      try {
+        const clippedAgora = dataAgora.data.map((i: any) => ({
+          id: i.id,
+          dao: DAO_NAME,
+          title: i.markdowntitle,
+          body: i.description,
+          createdTime: i.createdTime,
+          choices:
+            typeof i.proposalResults.options !== "undefined"
+              ? i.proposalResults.options.map((choice: any) => ({
+                  type: choice.option,
+                  votesCount: choice.votes,
+                }))
+              : convertProposalResultsToArray(i.proposalResults),
+
+          start: new Date(i.startTime).getTime() / 1000,
+          end: new Date(i.endTime).getTime() / 1000,
+          author: {
+            address: i.proposer,
+            picture: `https://cdn.stamp.fyi/avatar/eth:${i.proposer}`,
+          },
+          link: `https://vote.optimism.io/proposals/${i.id}`,
+          space: "",
+          status: i.status,
+          state:
+            new Date(i.endTime).getTime() < new Date().getTime()
+              ? "closed"
+              : "active",
+          source: "agora",
+        }));
+
+        allProposals.push(...clippedAgora);
+      } catch (error) {
+        console.error("Error: ", error);
+      }
 
       offset += 50;
       console.log("AGORA: Fetched proposals up to cursor:", offset);

@@ -22,3 +22,34 @@ TALLY_API_KEY
 FBASE_DATABASE_URL
 FBASE_CREDENTIALS_JSON
 ```
+
+## Deploying
+
+1. Build the project
+
+```bash
+cd functions
+npm run build
+```
+
+2. Test the function
+
+```bash
+npm run serve
+```
+
+3. Check the env variables in the firebase console
+
+```bash
+ firebase functions:config:get
+```
+
+4. Deploy the function
+
+```bash
+
+firebase functions:config:set AGORA_SIGNER_MNE="..." \
+  TALLY_API_KEY="..." \
+  FBASE_DATABASE_URL="..." \
+  FBASE_CREDENTIALS_JSON="..." \
+```

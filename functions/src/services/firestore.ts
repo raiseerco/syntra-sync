@@ -24,6 +24,7 @@ const db = admin.firestore();
 
 export async function saveProposalsBatch(proposals: any[]) {
   //  split proposals into each DAO
+  console.log("*** Attempt to write");
   const batchSize = 500; // Max length in Firestore
 
   const DAOCollection = db.collection("DAOS");
@@ -52,12 +53,15 @@ export async function saveProposalsBatch(proposals: any[]) {
 
         try {
           await batch.commit();
-          console.log(`${daoId}: Batch of ${chunk.length} saved successfully.`);
+          console.log(
+            `* ${daoId}: Batch of ${chunk.length} saved successfully.`,
+          );
         } catch (error) {
           console.error("Error: ", error);
         }
       }
     }
+    console.log("*** Write done");
   } catch (error) {
     console.error("Error retrieving DAOs: ", error);
   }
