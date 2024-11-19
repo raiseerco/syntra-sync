@@ -34,3 +34,17 @@ export function createSiweMessage(
 export async function delay(ms: string | number) {
   return new Promise(resolve => setTimeout(resolve, parseInt(ms.toString())));
 }
+
+export function extractTitle(title: string) {
+  // Ending delimiters
+  const delimiters = [" .", ".", " -"];
+
+  if (title.length <= 64) return title;
+
+  const cutoffIndex = delimiters
+    .map(delimiter => title.indexOf(delimiter))
+    .filter(index => index !== -1)
+    .reduce((min, current) => Math.min(min, current), title.length);
+
+  return title.slice(0, cutoffIndex).trim();
+}

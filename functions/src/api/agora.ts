@@ -1,4 +1,5 @@
 import { AGORA_MAX_LIMIT_PROPOSALS, AGORA_URL } from "../utils/constants";
+import { extractTitle, weiToEther } from "../utils/utils";
 
 import dotenv from "dotenv";
 import { ethers } from "ethers";
@@ -10,7 +11,10 @@ const MNE = process.env.AGORA_SIGNER_MNE;
 const DAO_NAME = "optimism"; // TODO change this for future DAOs
 
 const convertProposalResultsToArray = (obj: any) =>
-  Object.entries(obj).map(([type, value]) => ({ type, value }));
+  Object.entries(obj).map(([type, votesCount]) => ({
+    type,
+    votesCount: votesCount as string, //weiToEther(votesCount as string),
+  }));
 
 async function getNonce() {
   try {
@@ -70,6 +74,71 @@ async function authWithAgora() {
   }
 }
 
+// function processChoices(choices: any) {
+//   // with options
+//   if (typeof choices.options !== "undefined") {
+//     // calculate totals
+
+//     // console.log(" choices.options : ", choices.options);
+//     const choicesValues = choices.options.map((choice: any) => choice.votes);
+//     // sum all the votes in BigInt
+//     const totalVotes = choicesValues.reduce(
+//       (a: string, b: string) => parseFloat(a) + parseFloat(b),
+//       0,
+//     );
+
+//     return choices.options.map((choice: any) => ({
+//       type: choice.option,
+//       votesCount: weiToEther(choice.votes),
+//       percent: totalVotes === 0 ? 0 : (choice.votes / totalVotes) * 100,
+//     }));
+//   }
+
+//   const da = convertProposalResultsToArray(choices);
+
+//   const choicesValues = da.map((choice: any) => choice.votesCount);
+
+//   // sum all the votes in BigInt
+//   const totalVotes = choicesValues.reduce(
+//     (a: string, b: string) => parseFloat(a) + parseFloat(b),
+//     0,
+//   );
+
+//   return da.map((choice: any) => ({
+//     type: choice.type,
+//     votesCount: weiToEther(choice.votesCount),
+//     percent: totalVotes === 0 ? 0 : (choice.votesCount / totalVotes) * 100,
+//   }));
+
+//   // typeof i.proposalResults.options !== "undefined"
+//   // ? i.proposalResults.options.map((choice: any) => ({
+//   //     type: choice.option,
+//   //     votesCount: weiToEther(choice.votes),
+//   //   }))
+//   // : convertProposalResultsToArray(i.proposalResults)
+// }
+
+function processChoices(choices: any) {
+  const calculateResults = (data: any[], getVotes: (choice: any) => number) => {
+    const totalVotes = data.reduce((sum, choice) => sum + getVotes(choice), 0);
+
+    return data.map(choice => ({
+      type: choice.option || choice.type,
+      votesCount: weiToEther(getVotes(choice)),
+      percent: totalVotes === 0 ? 0 : (getVotes(choice) / totalVotes) * 100,
+    }));
+  };
+
+  if (choices.options) {
+    return calculateResults(choices.options, choice =>
+      parseFloat(choice.votes),
+    );
+  }
+
+  const dataArray = convertProposalResultsToArray(choices);
+  return calculateResults(dataArray, choice => parseFloat(choice.votesCount));
+}
+
 export async function fetchProposalsAgora() {
   try {
     // auth
@@ -106,16 +175,10 @@ export async function fetchProposalsAgora() {
         const clippedAgora = dataAgora.data.map((i: any) => ({
           id: i.id,
           dao: DAO_NAME,
-          title: i.markdowntitle,
-          body: i.description,
+          title: extractTitle(i.markdowntitle),
+          body: i.description.replace(/\\n/g, "\n"),
           createdTime: i.createdTime,
-          choices:
-            typeof i.proposalResults.options !== "undefined"
-              ? i.proposalResults.options.map((choice: any) => ({
-                  type: choice.option,
-                  votesCount: choice.votes,
-                }))
-              : convertProposalResultsToArray(i.proposalResults),
+          choices: processChoices(i.proposalResults),
 
           start: new Date(i.startTime).getTime() / 1000,
           end: new Date(i.endTime).getTime() / 1000,
