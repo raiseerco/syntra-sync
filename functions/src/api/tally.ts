@@ -259,6 +259,7 @@ export async function fetchProposalsTally(organizationId: string) {
     const dataTallyClipped = allProposals.map((i: any) => ({
       id: i.id,
       dao: DAO_NAME,
+      createdTime: i.events[0].createdAt,
       title: i.metadata.title,
       body: i.metadata.description,
       quorum: i.quorum,

@@ -26,6 +26,7 @@ export async function fetchProposalsSnapshot(daoAddress: string) {
           id
           title
           body
+          created
           choices
           scores
           scores_state
@@ -101,6 +102,7 @@ export async function fetchProposalsSnapshot(daoAddress: string) {
       return {
         ...i,
         dao: DAO_NAME,
+        createdTime: i.created,
         source: "snapshot",
         choices: i.choices.map((choice: any, index: number) => ({
           type: choice,

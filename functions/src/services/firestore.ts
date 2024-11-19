@@ -36,7 +36,9 @@ export async function saveProposalsBatch(proposals: any[]) {
 
       const daoId = doc.id;
       const proposalsCollection = db.collection(`DAOS/${daoId}/proposals`);
-      const daoProposals = proposals.filter(i => i.dao === daoId);
+      const daoProposals = proposals
+        .filter(i => i.dao === daoId)
+        .sort((a, b) => b.end - a.end);
 
       const chunks = [];
       for (let i = 0; i < daoProposals.length; i += batchSize) {
