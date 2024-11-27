@@ -20,16 +20,13 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        working-directory: ./functions
         run: npm install
 
       - name: Set up environment variables
         run: echo "${{ secrets.ENV_FILE }}" > .env
 
       - name: Build the project
-        working-directory: ./functions
         run: npm run build
 
       - name: Run sync script
-        working-directory: ./functions
         run: node lib/index.js
