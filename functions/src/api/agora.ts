@@ -74,50 +74,6 @@ async function authWithAgora() {
   }
 }
 
-// function processChoices(choices: any) {
-//   // with options
-//   if (typeof choices.options !== "undefined") {
-//     // calculate totals
-
-//     // console.log(" choices.options : ", choices.options);
-//     const choicesValues = choices.options.map((choice: any) => choice.votes);
-//     // sum all the votes in BigInt
-//     const totalVotes = choicesValues.reduce(
-//       (a: string, b: string) => parseFloat(a) + parseFloat(b),
-//       0,
-//     );
-
-//     return choices.options.map((choice: any) => ({
-//       type: choice.option,
-//       votesCount: weiToEther(choice.votes),
-//       percent: totalVotes === 0 ? 0 : (choice.votes / totalVotes) * 100,
-//     }));
-//   }
-
-//   const da = convertProposalResultsToArray(choices);
-
-//   const choicesValues = da.map((choice: any) => choice.votesCount);
-
-//   // sum all the votes in BigInt
-//   const totalVotes = choicesValues.reduce(
-//     (a: string, b: string) => parseFloat(a) + parseFloat(b),
-//     0,
-//   );
-
-//   return da.map((choice: any) => ({
-//     type: choice.type,
-//     votesCount: weiToEther(choice.votesCount),
-//     percent: totalVotes === 0 ? 0 : (choice.votesCount / totalVotes) * 100,
-//   }));
-
-//   // typeof i.proposalResults.options !== "undefined"
-//   // ? i.proposalResults.options.map((choice: any) => ({
-//   //     type: choice.option,
-//   //     votesCount: weiToEther(choice.votes),
-//   //   }))
-//   // : convertProposalResultsToArray(i.proposalResults)
-// }
-
 function processChoices(choices: any) {
   const calculateResults = (data: any[], getVotes: (choice: any) => number) => {
     const totalVotes = data.reduce((sum, choice) => sum + getVotes(choice), 0);
