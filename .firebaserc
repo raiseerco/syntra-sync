@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "default": "demosphere-web3"
+  },
+  "functions": {
+    "predeploy": []
+  }
+}
