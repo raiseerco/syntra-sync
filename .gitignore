@@ -18,6 +18,7 @@ firebase-debug.*.log
 dist/
 build/
 out/
+lib/
 
 # Environment variables
 .env
