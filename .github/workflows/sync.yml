@@ -3,32 +3,27 @@ name: Daily Sync
 on:
   schedule:
     - cron: "0 0 * * *" # 00:00 UTC
-  workflow_dispatch: # can be fired manually
+  workflow_dispatch: # can be run manually
 
 jobs:
   sync:
     runs-on: ubuntu-latest
 
     steps:
-      # setup repository
       - name: Check out repository
         uses: actions/checkout@v3
 
-      # setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20
           cache: "npm"
 
-      # deps
       - name: Install dependencies
         run: npm install
 
-      # sete vars from Secrets
       - name: Set up environment variables
-        env:
-          run: echo "${{ secrets.ENV_FILE }}" > .env
+        run: echo "${{ secrets.ENV_FILE }}" > .env
 
       - name: Build the project
         run: npm run build
