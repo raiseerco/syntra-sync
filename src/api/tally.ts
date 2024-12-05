@@ -2,6 +2,7 @@ import { API_RETRY_DELAY, TALLY_GRAPHQL_URL } from "../utils/constants";
 import { delay, weiToEther } from "../utils/utils";
 
 import dotenv from "dotenv";
+import { sendTelegramMessage } from "../services/telegram";
 
 dotenv.config();
 const TALLY_API_KEY = process.env.TALLY_API_KEY as string;
@@ -73,10 +74,6 @@ export async function fetchProposalsTally(organizationId: string) {
               isBehind
               isPrimary
               kind
-              lastIndexedBlock {
-                timestamp
-                ts
-              }
               name
               organization {
                 id
@@ -243,7 +240,11 @@ export async function fetchProposalsTally(organizationId: string) {
       });
 
       if (!resTally.ok) {
-        console.error("Error:", resTally.status, resTally.statusText);
+        console.log("Error:", resTally);
+        sendTelegramMessage(
+          `🔶 Tally error: (HTTP ${resTally.status}) ${resTally.statusText}`,
+        );
+
         return { ok: false, status: resTally.status };
       }
 
@@ -291,8 +292,9 @@ export async function fetchProposalsTally(organizationId: string) {
     console.log(`TALLY: Read ${dataTallyClipped.length} records.`);
     const d: any[] = dataTallyClipped;
     return { ok: true, data: d };
-  } catch (error) {
-    console.error("TALLY: Error fetching proposals: ", error);
+  } catch (error: any) {
+    console.error("🔶 TALLY: Error fetching proposals: ", error);
+    sendTelegramMessage("❌ Tally error: " + error.message);
     return { ok: false, status: error };
   }
 }

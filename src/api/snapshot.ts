@@ -106,7 +106,7 @@ export async function fetchProposalsSnapshot(daoAddress: string) {
         source: "snapshot",
         choices: i.choices.map((choice: any, index: number) => ({
           type: choice,
-          votesCount: i.scores[index],
+          votesCount: i.scores[index] || 0,
           votersCount: i.scores_total,
           percent:
             i.scores_total === 0 ? 0 : (i.scores[index] / i.scores_total) * 100,
