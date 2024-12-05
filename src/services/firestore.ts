@@ -1,5 +1,6 @@
 import admin from "firebase-admin";
 import dotenv from "dotenv";
+import { sendTelegramMessage } from "./telegram";
 
 dotenv.config();
 
@@ -66,5 +67,6 @@ export async function saveProposalsBatch(proposals: any[]) {
     console.log("*** Write done");
   } catch (error) {
     console.error("Error retrieving DAOs: ", error);
+    sendTelegramMessage(`🔶 Firestore write: ${error}`);
   }
 }

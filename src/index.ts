@@ -2,12 +2,14 @@ import { fetchProposalsAgora } from "./api/agora";
 import { fetchProposalsSnapshot } from "./api/snapshot";
 import { fetchProposalsTally } from "./api/tally";
 import { saveProposalsBatch } from "./services/firestore";
+import { sendTelegramMessage } from "./services/telegram";
 
 const TALLY_ORGANIZATION_ID = "2206072050315953936"; // TODO take from firebase
 const SNAPSHOT_DAO_ADDRESS = "arbitrumfoundation.eth"; // TODO take from firebase
 
 async function start() {
   try {
+    sendTelegramMessage("🏁 Sync process started...");
     const proposalsAgora = await fetchProposalsAgora();
     const proposalsTally = await fetchProposalsTally(
       TALLY_ORGANIZATION_ID as string,
@@ -25,9 +27,13 @@ async function start() {
     ];
 
     await saveProposalsBatch(allData);
-    console.log(`*** Processed ${allData.length} proposals successfully`);
-  } catch (error) {
-    console.error("Error in start function:", error);
+    const endingMessage = `✅ Sync finished ok. Processed ${allData.length} proposals.`;
+
+    console.log(endingMessage);
+    sendTelegramMessage(endingMessage);
+  } catch (error: any) {
+    console.error("❌ Error in start function:", error);
+    sendTelegramMessage("❌ Sync error: " + error.message);
     throw error;
   }
 }
