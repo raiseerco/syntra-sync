@@ -27,7 +27,7 @@ async function start() {
     ];
 
     await saveProposalsBatch(allData);
-    const endingMessage = `✅ Sync finished ok. Processed ${allData.length} proposals.`;
+    const endingMessage = `✅ Sync finished ok. Screened ${allData.length} proposals.`;
 
     console.log(endingMessage);
     sendTelegramMessage(endingMessage);

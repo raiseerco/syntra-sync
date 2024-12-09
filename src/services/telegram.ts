@@ -6,6 +6,9 @@ export async function sendTelegramMessage(message: string) {
   const BOT_TOKEN = process.env.BOT_TOKEN as string;
   const CHAT_ID = process.env.CHAT_ID as string;
 
+  console.log("*** bot token", BOT_TOKEN);
+  console.log("*** chat id", CHAT_ID);
+
   const telegramApiUrl = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
 
   try {

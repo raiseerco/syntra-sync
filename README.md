@@ -17,39 +17,27 @@ Basic flow for proposals:
 These are the required env vars:
 
 ```
-AGORA_SIGNER_MN
-TALLY_API_KEY
-FBASE_DATABASE_URL
-FBASE_CREDENTIALS_JSON
+Stored in Github secrets:
+
+AGORA_SIGNER_MNE An erc20 wallet mnemonic used for signing into Agora service
+TALLY_API_KEY Tally API key
+FBASE_DATABASE_URL Firebase database url
+FBASE_CREDENTIALS_JSON Firebase credentials json
+
+
+Stored in Github env vars:
+
+BOT_TOKEN Telegram bot token, acquired from BotFather (this could be in the upper section though)
+CHAT_ID Telegram chat id, acquired from BotFather
+
 ```
 
-## Deploying
+This vars setup is specified in `sync.yml` file.
 
-1. Build the project
+## Debugging
 
-```bash
-cd functions
-npm run build
-```
-
-2. Test the function
+Just populate the env vars in `.env` file and run:
 
 ```bash
-npm run serve
-```
-
-3. Check the env variables in the firebase console
-
-```bash
- firebase functions:config:get
-```
-
-4. Deploy the function
-
-```bash
-
-firebase functions:config:set AGORA_SIGNER_MNE="..." \
-  TALLY_API_KEY="..." \
-  FBASE_DATABASE_URL="..." \
-  FBASE_CREDENTIALS_JSON="..." \
+npm run dev
 ```
