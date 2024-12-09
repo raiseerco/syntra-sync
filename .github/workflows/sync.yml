@@ -24,7 +24,8 @@ jobs:
 
       - name: Set up environment variables
         run: echo "${{ secrets.ENV_FILE }}" > .env
-
+          echo "BOT_TOKEN=${{ vars.BOT_TOKEN }}" >> .env
+          echo "CHAT_ID=${{ vars.CHAT_ID }}" >> .env
       - name: Build the project
         run: npm run build
 
