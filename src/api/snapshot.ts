@@ -124,7 +124,7 @@ export async function fetchProposalsSnapshot(daoAddress: string) {
 
     console.log(`SNAPSHOT: Read ${dataSnapshotClipped.length} records.`);
     const d: any[] = dataSnapshotClipped;
-    return { ok: true, data: d };
+    return { ok: true, data: d, amount: dataSnapshotClipped.length };
   } catch (error) {
     console.error("SNAPSHOT: Error fetching proposals: ", error);
     return { ok: false, status: error };

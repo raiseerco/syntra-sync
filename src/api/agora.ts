@@ -163,7 +163,7 @@ export async function fetchProposalsAgora() {
     } while (more);
 
     console.log(`AGORA: Read ${allProposals.length} records.`);
-    return { ok: true, data: allProposals };
+    return { ok: true, data: allProposals, amount: allProposals.length };
   } catch (error) {
     console.error("AGORA: Error fetching proposals: ", error);
     return { ok: false, status: error };

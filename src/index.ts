@@ -27,7 +27,10 @@ async function start() {
     ];
 
     await saveProposalsBatch(allData);
-    const endingMessage = `✅ Sync finished ok. Screened ${allData.length} proposals.`;
+    const endingMessage = `✅ Sync finished ok. Screened ${allData.length} proposals.
+    - Tally: ${proposalsTally.amount}
+    - Agora: ${proposalsAgora.amount}
+    - Snapshot: ${proposalsSnapshot.amount}`;
 
     console.log(endingMessage);
     sendTelegramMessage(endingMessage);

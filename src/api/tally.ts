@@ -291,7 +291,7 @@ export async function fetchProposalsTally(organizationId: string) {
 
     console.log(`TALLY: Read ${dataTallyClipped.length} records.`);
     const d: any[] = dataTallyClipped;
-    return { ok: true, data: d };
+    return { ok: true, data: d, amount: dataTallyClipped.length };
   } catch (error: any) {
     console.error("🔶 TALLY: Error fetching proposals: ", error);
     sendTelegramMessage("❌ Tally error: " + error.message);
